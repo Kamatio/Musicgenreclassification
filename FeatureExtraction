@@ -21,7 +21,7 @@ def extract_feature(file_name):
     return mfccs,chroma,mel,contrast,tonnetz
     
     
-    features, train_labels = np.empty((0,193)), np.empty(0)
+features, train_labels = np.empty((0,193)), np.empty(0)
 labels = list(genres.keys())
 
 for genre in labels:
