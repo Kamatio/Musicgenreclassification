@@ -1,0 +1,14 @@
+training_features = shuffled_tr_features[0:160]
+training_labels = shuffled_tr_labels[0:160]
+testing_features = shuffled_tr_features[160:]
+testing_labels = shuffled_tr_labels[160:]
+
+def one_hot_encode(labels):
+    n_labels = len(labels)
+    n_unique_labels = len(np.unique(labels))
+    one_hot_encode = np.zeros((n_labels,n_unique_labels))
+    one_hot_encode[np.arange(n_labels), labels] = 1
+    return one_hot_encode
+
+training_labels = one_hot_encode(training_labels)
+testing_labels = one_hot_encode(testing_labels)
