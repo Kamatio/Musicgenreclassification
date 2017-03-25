@@ -1,0 +1,17 @@
+Loss_data = np.empty(shape=[1],dtype=float)
+y_true, y_pred = None, None
+
+ClassLabelFinal = []
+
+with tf.Session() as sess:
+    sess.run(init)
+    for epoch in range(training_epochs):
+        _,cost = sess.run([optimizer,loss],feed_dict={X: training_features,Y:training_labels})
+        Loss_data = np.append(Loss_data,cost)
+
+    y_pred = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
+    y_true = sess.run(tf.argmax(testing_labels,1))
+    print('Test accuracy: ',round(sess.run(accuracy, feed_dict={X: testing_features, Y: testing_labels}), 2))
+    
+    
+    saver.save(sess, '/Users/MA/Desktop/Mymodel')
