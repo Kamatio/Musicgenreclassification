@@ -1,0 +1,42 @@
+import os
+import sys
+import glob
+import librosa
+import numpy as np
+from sklearn.utils import *
+from sklearn.metrics import precision_recall_fscore_support
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from matplotlib.pyplot import specgram
+%matplotlib inline
+
+def extract_feature(file_name):
+    X, sample_rate = librosa.load(file_name)
+    stft = np.abs(librosa.stft(X))
+    mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T,axis=0)
+    chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T,axis=0)
+    mel = np.mean(librosa.feature.melspectrogram(X, sr=sample_rate).T,axis=0)
+    contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T,axis=0)
+    tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(X), sr=sample_rate).T,axis=0)
+    return mfccs,chroma,mel,contrast,tonnetz
+    
+    
+    features, train_labels = np.empty((0,193)), np.empty(0)
+labels = list(genres.keys())
+
+for genre in labels:
+    current_directory = os.listdir(dir_name + genre)
+    files = [file for file in current_directory if file.endswith(".wav")]
+    label = genres[genre]
+    for fn in files:
+        try:
+            mfccs, chroma, mel,contrast,tonnetz = extract_feature(dir_name + genre + '/' + fn)
+        except:
+            print ('Error with file: ' + fn)
+            continue
+        ext_features = np.hstack([mfccs, chroma, mel,contrast,tonnetz])
+        features = np.vstack([features,ext_features])
+        train_labels = np.append(train_labels, label)
+    
+        
+tr_features, tr_labels = np.array(features), np.array(train_labels, dtype = np.int)
