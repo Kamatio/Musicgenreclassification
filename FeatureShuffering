@@ -1,0 +1,8 @@
+print ((tr_features.shape))
+print ((tr_labels.shape))
+from sklearn.utils import shuffle
+shuffled_tr_features, shuffled_tr_labels = shuffle(tr_features[0:], tr_labels, random_state = 2)
+i = 0;
+for line in shuffled_tr_features:
+    print (shuffled_tr_labels[i])
+    i = i + 1
