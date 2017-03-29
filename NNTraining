@@ -12,15 +12,15 @@ Y = tf.placeholder(tf.float32,[None,n_classes])
 
 Weights_1 = tf.Variable(tf.random_normal([n_dim,n_hidden_units_one]), name = 'w1')
 bias_1 = tf.Variable(tf.random_normal([n_hidden_units_one]), name = 'b1')
-activation_1 = tf.nn.relu(tf.matmul(X , Weights_1) + bias_1)
+activation_1 = tf.nn.sigmoid(tf.matmul(X , Weights_1) + bias_1)
 
 Weights_2 = tf.Variable(tf.random_normal([n_hidden_units_one,n_hidden_units_two]), name = 'w2')
 bias_2 = tf.Variable(tf.random_normal([n_hidden_units_two]), name = 'b2')
-activation_2 = tf.nn.relu(tf.matmul(activation_1,Weights_2) + bias_2)
+activation_2 = tf.nn.sigmoid(tf.matmul(activation_1,Weights_2) + bias_2)
 
 Weights = tf.Variable(tf.random_normal([n_hidden_units_two,n_classes]), name = 'W')
 bias = tf.Variable(tf.random_normal([n_classes]), name = 'B')
-yPredbyNN = tf.matmul(activation_2,Weights) + bias
+yPredbyNN = tf.nn.softmax(tf.matmul(activation_2,Weights) + bias)
 
 tf.add_to_collection('vars', Weights_1)
 tf.add_to_collection('vars', bias_1)
