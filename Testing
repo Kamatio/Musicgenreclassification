@@ -1,17 +1,33 @@
-Loss_data = np.empty(shape=[1],dtype=float)
-y_true, y_pred = None, None
+n_dim = training_features.shape[1]
+n_classes = 2
 
-ClassLabelFinal = []
+n_hidden_units_one = 300
+n_hidden_units_two = 800
+learning_rate = 0.01
 
-with tf.Session() as sess:
-    sess.run(init)
-    for epoch in range(training_epochs):
-        _,cost = sess.run([optimizer,loss],feed_dict={X: training_features,Y:training_labels})
-        Loss_data = np.append(Loss_data,cost)
 
-    y_pred = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
-    y_true = sess.run(tf.argmax(testing_labels,1))
-    print('Test accuracy: ',round(sess.run(accuracy, feed_dict={X: testing_features, Y: testing_labels}), 2))
+X = tf.placeholder(tf.float32,[None,n_dim])
+Y = tf.placeholder(tf.float32,[None,n_classes])
+
+
+Weights_1 = tf.Variable(tf.random_normal([n_dim,n_hidden_units_one]), name = 'w1')
+bias_1 = tf.Variable(tf.random_normal([n_hidden_units_one]), name = 'b1')
+activation_1 = tf.nn.relu(tf.matmul(X , Weights_1) + bias_1)
+
+Weights_2 = tf.Variable(tf.random_normal([n_hidden_units_one,n_hidden_units_two]), name = 'w2')
+bias_2 = tf.Variable(tf.random_normal([n_hidden_units_two]), name = 'b2')
+activation_2 = tf.nn.sigmoid(tf.matmul(activation_1, Weights_2) + bias_2)
+
+Weights = tf.Variable(tf.random_normal([n_hidden_units_two,n_classes]), name = 'W')
+bias = tf.Variable(tf.random_normal([n_classes]), name = 'B')
+yPredbyNN = tf.nn.softmax(tf.matmul(activation_2, Weights) + bias)
+
+new_saver = tf.train.import_meta_graph(r'/Users/MA/Desktop/Jazzregmodel.meta')
+
+with tf.Session() as session:
+    new_saver.restore(session, r'/Users/MA/Desktop/checkpoint')
+    out_PredForUnlabeledData = session.run(tf.argmax( out_Pred,1),feed_dict={X: testing_features})
     
-    
-    saver.save(sess, '/Users/MA/Desktop/Mymodel')
+    print(out_PredForUnlabeledData)
+
+
