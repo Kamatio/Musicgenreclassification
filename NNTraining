@@ -91,23 +91,24 @@ for v in all_vars:
 
 #TESTINGONUNSEENDATA 
 
-def load_timestamps():
-    print ("Now, Testing the unlabel data and writing the results")
-    YPredByNNForUnlabeledData = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
-    print (YPredByNNForUnlabeledData)
+print ("Now, Testing the unlabel data and writing the results")
+YPredByNNForUnlabeledData = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
+print (YPredByNNForUnlabeledData)
+    
+#def load_timestamps():
+#def load_dataset(Test_dataset_path):
     
     
-    for i in range (len(YPredByNNForUnlabeledData)):
+for i in range (len(YPredByNNForUnlabeledData)):
         
         if YPredByNNForUnlabeledData[i] == 0:
             ClassLabelFinal.append('reggae')
         
-    else:
-        ClassLabelFinal.append('jazz')
-
-def load_dataset(Test_dataset_path):
-    cwd = os.getcwd()
-    Test_dataset_path = ("/Users/MA/Desktop/TestJR/")
-    Test_dataset, Total_Instances = load_dataset(Test_dataset_path)
-    timestamps = load_timestamps(Test_dataset)
-    write_results("/Users/MA/Desktop/Cls/timestamps", "/Users/MA/Desktop/Cls/ClassLabelFinal", "/Users/MA/Desktop/Cls/Result.csv")
+        else:
+            ClassLabelFinal.append('jazz')
+            
+cwd = os.getcwd()
+Test_dataset_path = ("/Users/MA/Desktop/TestJR/")
+Test_dataset, Total_Instances = load_dataset(Test_dataset_path)
+timestamps = load_timestamps(Test_dataset)
+write_results('/Users/MA/Desktop/Cls/timestamps', '/Users/MA/Desktop/Cls/ClassLabelFinal', '/Users/MA/Desktop/Cls/Result.csv')
