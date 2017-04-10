@@ -12,7 +12,7 @@ Y = tf.placeholder(tf.float32,[None,n_classes])
 
 Weights_1 = tf.Variable(tf.random_normal([n_dim,n_hidden_units_one]), name = 'w1')
 bias_1 = tf.Variable(tf.random_normal([n_hidden_units_one]), name = 'b1')
-activation_1 = tf.nn.relu(tf.matmul(X , Weights_1) + bias_1)
+activation_1 = tf.nn.tanh(tf.matmul(X , Weights_1) + bias_1)
 
 Weights_2 = tf.Variable(tf.random_normal([n_hidden_units_one,n_hidden_units_two]), name = 'w2')
 bias_2 = tf.Variable(tf.random_normal([n_hidden_units_two]), name = 'b2')
@@ -96,16 +96,16 @@ YPredByNNForUnlabeledData = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testin
 print (YPredByNNForUnlabeledData)
     
 #def load_timestamps():
-#def load_dataset(Test_dataset_path):
-    
-    
-for i in range (len(YPredByNNForUnlabeledData)):
+
+def load_dataset(Test_dataset_path):
+    for i in range (len(YPredByNNForUnlabeledData)):
         
         if YPredByNNForUnlabeledData[i] == 0:
             ClassLabelFinal.append('reggae')
         
         else:
             ClassLabelFinal.append('jazz')
+        return label
             
 cwd = os.getcwd()
 Test_dataset_path = ("/Users/MA/Desktop/TestJR/")
