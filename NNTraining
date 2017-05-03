@@ -1,11 +1,11 @@
-training_epochs = 1000
+training_epochs = 500
 n_dim = training_features.shape[1]
 n_classes = 2
-n_hidden_units_one = 300
-n_hidden_units_two = 800
+n_hidden_units_one = 85
+n_hidden_units_two = 95
 
 sd = 1 / np.sqrt(n_dim)
-learning_rate = 0.001
+learning_rate = 0.003
 
 X = tf.placeholder(tf.float32,[None,n_dim])
 Y = tf.placeholder(tf.float32,[None,n_classes])
@@ -34,8 +34,8 @@ tf.add_to_collection('vars', bias)
 saver = tf.train.Saver()
 
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(yPredbyNN, Y))
-#optimizer = tf.train.RMSPropOptimizer(learning_rate, decay = 0.75).minimize(loss)
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+optimizer = tf.train.RMSPropOptimizer(learning_rate, decay = 0.75).minimize(loss)
+#optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
 CorrectPred = tf.equal(tf.argmax(yPredbyNN,1), tf.argmax(Y,1))
 accuracy = tf.reduce_mean(tf.cast(CorrectPred, tf.float32))
@@ -91,24 +91,22 @@ for v in all_vars:
 
 #TESTINGONUNSEENDATA 
 
-print ("Now, Testing the unlabel data and writing the results")
+print ("Now, Testing the unlabel data and writing the results to CSV file")
 YPredByNNForUnlabeledData = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
 print (YPredByNNForUnlabeledData)
-    
-#def load_timestamps():
 
-def load_dataset(Test_dataset_path):
-    for i in range (len(YPredByNNForUnlabeledData)):
-        
-        if YPredByNNForUnlabeledData[i] == 0:
-            ClassLabelFinal.append('reggae')
-        
-        else:
-            ClassLabelFinal.append('jazz')
-        return label
-            
+for i in xrange (len(YPredByNNForUnlabeledData)):
+
+   if YPredByNNForUnlabeledData[i] == 0:
+    		ClassLabelFinal.append('pad')
+   else:
+   
+        ClassLabelFinal.append('knuck')
+
 cwd = os.getcwd()
-Test_dataset_path = ("/Users/MA/Desktop/TestJR/")
-Test_dataset, Total_Instances = load_dataset(Test_dataset_path)
+Test_dataset_path = ("%s/data/test")%cwd
+Test_dataset, Total_Instances = load_instances(Test_dataset_path)
+
 timestamps = load_timestamps(Test_dataset)
-write_results('/Users/MA/Desktop/Cls/timestamps', '/Users/MA/Desktop/Cls/ClassLabelFinal', '/Users/MA/Desktop/Cls/Result.csv')
+
+write_results(timestamps, ClassLabelFinal, 'Result.csv')
