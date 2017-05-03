@@ -1,8 +1,8 @@
 n_dim = training_features.shape[1]
 n_classes = 2
 
-n_hidden_units_one = 300
-n_hidden_units_two = 800
+n_hidden_units_one = 85
+n_hidden_units_two = 95
 learning_rate = 0.001
 
 
@@ -12,7 +12,7 @@ Y = tf.placeholder(tf.float32,[None,n_classes])
 
 Weights_1 = tf.Variable(tf.random_normal([n_dim,n_hidden_units_one]), name = 'w1')
 bias_1 = tf.Variable(tf.random_normal([n_hidden_units_one]), name = 'b1')
-activation_1 = tf.nn.relu(tf.matmul(X , Weights_1) + bias_1)
+activation_1 = tf.nn.tanh(tf.matmul(X , Weights_1) + bias_1)
 
 Weights_2 = tf.Variable(tf.random_normal([n_hidden_units_one,n_hidden_units_two]), name = 'w2')
 bias_2 = tf.Variable(tf.random_normal([n_hidden_units_two]), name = 'b2')
