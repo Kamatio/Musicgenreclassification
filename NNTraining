@@ -20,7 +20,7 @@ activation_2 = tf.nn.sigmoid(tf.matmul(activation_1,Weights_2) + bias_2)
 
 Weights = tf.Variable(tf.random_normal([n_hidden_units_two,n_classes]), name = 'W')
 bias = tf.Variable(tf.random_normal([n_classes]), name = 'B')
-yPredbyNN = tf.nn.softmax(tf.matmul(activation_2,Weights) + bias)
+y_pred = tf.nn.softmax(tf.matmul(activation_2,Weights) + bias)
 
 tf.add_to_collection('vars', Weights_1)
 tf.add_to_collection('vars', bias_1)
@@ -33,11 +33,11 @@ tf.add_to_collection('vars', bias)
 
 saver = tf.train.Saver()
 
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(yPredbyNN, Y))
-optimizer = tf.train.RMSPropOptimizer(learning_rate, decay = 0.75).minimize(loss)
+loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_pred, Y))
+optimizer = tf.train.RMSPropOptimizer(learning_rate, decay = 0.0001).minimize(cost_function)
 #optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
-CorrectPred = tf.equal(tf.argmax(yPredbyNN,1), tf.argmax(Y,1))
+CorrectPred = tf.equal(tf.argmax(y_pred,1), tf.argmax(Y,1))
 accuracy = tf.reduce_mean(tf.cast(CorrectPred, tf.float32))
 
 init = tf.global_variables_initializer()
@@ -53,7 +53,7 @@ with tf.Session() as sess:
         _,cost = sess.run([optimizer,loss],feed_dict={X: training_features,Y:training_labels})
         Loss_data = np.append(Loss_data,cost)
 
-    y_pred = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
+    y_pred = sess.run(tf.argmax(y_pred,1),feed_dict={X: testing_features})
     y_true = sess.run(tf.argmax(testing_labels,1))
     print('Test accuracy: ',round(sess.run(accuracy, feed_dict={X: testing_features, Y: testing_labels}), 2))
     
@@ -92,16 +92,16 @@ for v in all_vars:
 #TESTINGONUNSEENDATA 
 
 print ("Now, Testing the unlabel data and writing the results to CSV file")
-YPredByNNForUnlabeledData = sess.run(tf.argmax(yPredbyNN,1),feed_dict={X: testing_features})
-print (YPredByNNForUnlabeledData)
+y_predForUnlabeledData = sess.run(tf.argmax(y_pred,1),feed_dict={X: testing_features})
+print (y_predForUnlabeledData)
 
-for i in xrange (len(YPredByNNForUnlabeledData)):
+for i in xrange (len(y_predNNForUnlabeledData)):
 
-   if YPredByNNForUnlabeledData[i] == 0:
-    		ClassLabelFinal.append('pad')
+   if y_predByNNForUnlabeledData[i] == 0:
+    		ClassLabelFinal.append('jazz')
    else:
    
-        ClassLabelFinal.append('knuck')
+        ClassLabelFinal.append('reggae')
 
 cwd = os.getcwd()
 Test_dataset_path = ("%s/data/test")%cwd
